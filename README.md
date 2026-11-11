@@ -50,24 +50,30 @@ jvmti-lab/
 
 ## Что понадобится
 
-- Android Studio с NDK (актуальная LTS) и CMake.
+- Android SDK с NDK `30.0.16248370`, CMake и Ninja (подойдут те, что ставит Android Studio, или из Homebrew).
 - JDK 17 или новее (для Gradle и сервера).
-- Эмулятор или устройство с Android 9 (API 28) и выше. Удобнее всего эмулятор `x86_64`: на нём VaultNotes ходит на локальный сервер по адресу `10.0.2.2`.
+- Эмулятор или устройство с Android 9 (API 28) и выше. На эмуляторе VaultNotes ходит на локальный сервер по адресу `10.0.2.2`.
 - `adb` в `PATH`.
 
 ## Быстрый старт
 
-Код появляется вместе со статьями, поэтому сейчас часть шагов — план.
+Код появляется вместе со статьями: сейчас готовы VaultNotes и агент первой части.
 
-1. Запустить сервер: `./scripts/run-server.sh` (см. [`server`](server)).
-2. Собрать и установить VaultNotes на эмулятор (см. [`crackme-vaultnotes`](crackme-vaultnotes)).
-3. Собрать агент нужной части и подключить его к запущенному приложению:
+1. Собрать и установить VaultNotes (подробнее в [`crackme-vaultnotes`](crackme-vaultnotes)):
 
    ```bash
-   ./scripts/attach-agent.sh agents/part1-recon/build/libagent_recon.so
+   cd crackme-vaultnotes && ./gradlew :app:assembleAudit && cd ..
+   adb install -r crackme-vaultnotes/app/build/outputs/apk/audit/app-audit.apk
    ```
 
-4. Читать вывод агента в logcat или забрать JSON-отчёт: `./scripts/pull-report.sh`.
+2. Собрать агенты и подключить агент разведки, перезапустив приложение:
+
+   ```bash
+   ./scripts/build-agents.sh
+   ./scripts/attach-agent.sh --start agents/build/arm64-v8a/part1-recon/libagent_recon.so
+   ```
+
+3. Читать вывод агента в logcat (`adb logcat -s jvmti-recon`) или забрать JSON-отчёт: `./scripts/pull-report.sh`.
 
 ## Если хотите пройти VaultNotes сами
 
