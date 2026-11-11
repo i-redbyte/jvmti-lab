@@ -33,3 +33,6 @@ out/
 
 # macOS
 .DS_Store
+
+# Настоящие флаги CTF: только у автора, в git не попадают
+ctf/secrets/
