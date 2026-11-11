@@ -10,6 +10,44 @@ java {
     }
 }
 
-dependencies {
-    // Ничего: премиум-код получает заметки обычными коллекциями Java.
+// Лицензия премиум-модуля генерируется при сборке из ctf/secrets/flags.properties.
+abstract class GenerateLicenseTask : DefaultTask() {
+    @get:InputFile
+    abstract val flags: RegularFileProperty
+
+    @get:OutputDirectory
+    abstract val outputDir: DirectoryProperty
+
+    @TaskAction
+    fun generate() {
+        val license = flags.get().asFile.readLines()
+            .first { it.startsWith("rev-01=") }
+            .substringAfter('=')
+        val dir = outputDir.get().asFile.resolve("dev/redbyte/vaultnotes/premium").apply { mkdirs() }
+        dir.resolve("PremiumLicense.java").writeText(
+            """
+            |package dev.redbyte.vaultnotes.premium;
+            |
+            |final class PremiumLicense {
+            |    static final String ID = "$license";
+            |
+            |    private PremiumLicense() {
+            |    }
+            |
+            |    static boolean isActive() {
+            |        return ID.startsWith("vault{");
+            |    }
+            |}
+            |""".trimMargin()
+        )
+    }
+}
+
+val generateLicense = tasks.register<GenerateLicenseTask>("generateLicense") {
+    flags = rootProject.layout.projectDirectory.file("../ctf/secrets/flags.properties")
+    outputDir = layout.buildDirectory.dir("generated/sources/license")
+}
+
+sourceSets.main {
+    java.srcDir(generateLicense)
 }

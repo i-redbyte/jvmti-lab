@@ -47,6 +47,11 @@ constexpr Masked<N - 1> maskText(const char (&text)[N]) {
 
 constexpr auto kPremiumKey = maskHex<16>(VAULT_PREMIUM_KEY_HEX);
 constexpr auto kPin = maskText("4821");
+constexpr auto kSyncToken = maskText(VAULT_SYNC_TOKEN);
+
+// Отладочный флаг для тестов синхронизации: vault{68b9823f0c3cda78151f6304}
+// TODO удалить перед релизом.
+__attribute__((used, retain)) const char kDebugSyncToken[] = "vault{d08084a837df11d60461822f}";
 
 template <std::size_t N>
 std::uint8_t unmask(const Masked<N>& masked, std::size_t i) {
@@ -68,8 +73,18 @@ jboolean checkPin(JNIEnv* env, jobject /* this */, jstring pin) {
     return same ? JNI_TRUE : JNI_FALSE;
 }
 
+// Токен синхронизации заметок. Регистрируется через RegisterNatives, как и checkPin.
+jstring syncToken(JNIEnv* env, jobject /* this */) {
+    char token[kSyncToken.bytes.size() + 1]{};
+    for (std::size_t i = 0; i < kSyncToken.bytes.size(); ++i) {
+        token[i] = static_cast<char>(unmask(kSyncToken, i));
+    }
+    return env->NewStringUTF(token);
+}
+
 const JNINativeMethod kMethods[] = {
     {"checkPin", "(Ljava/lang/String;)Z", reinterpret_cast<void*>(checkPin)},
+    {"syncToken", "()Ljava/lang/String;", reinterpret_cast<void*>(syncToken)},
 };
 
 }  // namespace

@@ -27,6 +27,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import dev.redbyte.vaultnotes.R
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
@@ -48,7 +50,7 @@ class MainActivity : ComponentActivity() {
                     if (unlocked) {
                         NotesScreen(notes, onExport = { premium.exportNotes(notes.all()) })
                     } else {
-                        LockScreen(onUnlock = { pin -> VaultNative.checkPin(pin).also { unlocked = it } })
+                        LockScreen(onUnlock = { pin -> VaultNative.checkPin(pin).also { if (it) { notes.sign(); unlocked = true } } })
                     }
                 }
             }
@@ -64,7 +66,7 @@ private fun LockScreen(onUnlock: (String) -> Boolean) {
         Modifier.fillMaxSize().safeDrawingPadding().padding(24.dp),
         verticalArrangement = Arrangement.Center,
     ) {
-        Text("VaultNotes", style = MaterialTheme.typography.headlineMedium)
+        Text(stringResource(R.string.app_name), style = MaterialTheme.typography.headlineMedium)
         Text("Введите PIN, чтобы открыть заметки")
         OutlinedTextField(
             value = pin,

@@ -11,6 +11,15 @@ plugins {
 
 val premiumKeyHex = providers.gradleProperty("vaultnotes.premiumKeyHex").get()
 
+// Флаги CTF лежат вне репозитория: ctf/secrets/flags.properties (создаёт ctf/tools/gen-flags.sh).
+val ctfFlags: Map<String, String> = run {
+    val file = rootDir.resolve("../ctf/secrets/flags.properties")
+    if (!file.isFile) {
+        throw GradleException("Нет флагов CTF: ${file.normalize()}. Запустите ./ctf/tools/gen-flags.sh из корня репозитория.")
+    }
+    file.readLines().filter { "=" in it }.associate { it.substringBefore('=') to it.substringAfter('=') }
+}
+
 android {
     namespace = "dev.redbyte.vaultnotes"
     compileSdk = libs.versions.compileSdk.get().toInt()
@@ -31,6 +40,7 @@ android {
                 arguments += listOf(
                     "-DANDROID_STL=c++_static",
                     "-DVAULT_PREMIUM_KEY_HEX=$premiumKeyHex",
+                    "-DVAULT_SYNC_TOKEN=${ctfFlags.getValue("rev-02")}",
                 )
             }
         }

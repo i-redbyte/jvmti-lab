@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">VaultNotes</string>
+    <!-- Промокод для тестировщиков, премиум без оплаты. -->
+    <string name="premium_promo_code" translatable="false">vault{664723a5140ae9067e6158d8}</string>
+</resources>

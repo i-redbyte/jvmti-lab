@@ -62,6 +62,7 @@ jvmti-lab/
 1. Собрать и установить VaultNotes (подробнее в [`crackme-vaultnotes`](crackme-vaultnotes)):
 
    ```bash
+   ./ctf/tools/gen-flags.sh
    cd crackme-vaultnotes && ./gradlew :app:assembleAudit && cd ..
    adb install -r crackme-vaultnotes/app/build/outputs/apk/audit/app-audit.apk
    ```

@@ -6,6 +6,6 @@ final class PremiumBadge {
     }
 
     static String text() {
-        return "_Экспортировано с VaultNotes Premium_";
+        return PremiumLicense.isActive() ? "_Экспортировано с VaultNotes Premium_" : "_VaultNotes_";
     }
 }

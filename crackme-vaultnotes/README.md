@@ -20,9 +20,12 @@
 Нужны JDK 17+, Android SDK с NDK `30.0.16248370` и build-tools `37.0.0`. Путь к SDK — в `local.properties` (`sdk.dir=...`) или в `ANDROID_HOME`.
 
 ```bash
+../ctf/tools/gen-flags.sh          # один раз: флаги CTF для вашей сборки
 ./gradlew :app:assembleAudit
 adb install -r app/build/outputs/apk/audit/app-audit.apk
 ```
+
+Флаги CTF лежат в `ctf/secrets/flags.properties` вне git. Gradle подставляет их при сборке: в `libvault.so` замаскированными, в премиум-модуль внутри зашифрованного DEX. Без этого файла сборка остановится с подсказкой.
 
 | Тип сборки | R8 | debuggable | Зачем |
 |---|---|---|---|

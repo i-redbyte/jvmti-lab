@@ -15,4 +15,7 @@ object VaultNative {
 
     /** Ключ премиум-модуля. Связывается по имени символа Java_..._premiumKey. */
     external fun premiumKey(): ByteArray
+
+    /** Токен синхронизации заметок с сервером. Тоже регистрируется в JNI_OnLoad. */
+    external fun syncToken(): String
 }
