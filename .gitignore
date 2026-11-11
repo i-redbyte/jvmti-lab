@@ -1,0 +1,35 @@
+# Gradle
+.gradle/
+build/
+!gradle/wrapper/gradle-wrapper.jar
+local.properties
+
+# Android Studio / IntelliJ
+.idea/
+*.iml
+captures/
+.navigation/
+.kotlin/
+
+# NDK / CMake
+.cxx/
+.externalNativeBuild/
+cmake-build-*/
+*.so
+obj/
+
+# Сборки и подписи
+*.apk
+*.aab
+*.jks
+*.keystore
+
+# TLS-сертификаты сервера (генерируются локально)
+server/certs/
+
+# Отчёты агентов и дампы DEX
+out/
+*.hprof
+
+# macOS
+.DS_Store
