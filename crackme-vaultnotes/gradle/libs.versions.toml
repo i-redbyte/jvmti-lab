@@ -1,0 +1,23 @@
+[versions]
+agp = "9.2.1"
+kotlin = "2.4.21"
+composeBom = "2026.06.01"
+activityCompose = "1.13.0"
+compileSdk = "36"
+targetSdk = "36"
+# Android 9: с этой версии есть Debug.attachJvmtiAgent и cmd activity attach-agent.
+minSdk = "28"
+ndk = "30.0.16248370"
+buildTools = "37.0.0"
+
+[libraries]
+compose-bom = { module = "androidx.compose:compose-bom", version.ref = "composeBom" }
+compose-ui = { module = "androidx.compose.ui:ui" }
+compose-foundation = { module = "androidx.compose.foundation:foundation" }
+compose-material3 = { module = "androidx.compose.material3:material3" }
+activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activityCompose" }
+kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
+
+[plugins]
+android-application = { id = "com.android.application", version.ref = "agp" }
+kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
