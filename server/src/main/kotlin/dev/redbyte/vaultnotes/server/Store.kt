@@ -6,7 +6,8 @@ import java.util.concurrent.ConcurrentHashMap
 /** Всё хранится в памяти: сервер учебный, после перезапуска состояние сбрасывается. */
 class Store {
     // Единственный пользователь. Логин и пароль подсказаны на экране входа.
-    private val users = mapOf("demo" to "demo")
+    // Пароль нарочно непохож на логин: в части 2 его ищут в памяти как «метку».
+    private val users = mapOf("demo" to "swordfish-7Gx")
     private val sessions = ConcurrentHashMap<String, String>()
     private val notes = ConcurrentHashMap<String, MutableList<String>>()
     private val random = SecureRandom()

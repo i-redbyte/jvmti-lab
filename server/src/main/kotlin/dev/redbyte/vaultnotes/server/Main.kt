@@ -15,10 +15,11 @@ private const val KEY_PASSWORD = "vaultnotes"
 /**
  * Локальный сервер VaultNotes.
  *
- *  - https://0.0.0.0:8443 — основной адрес, самоподписанный сертификат;
- *  - http://0.0.0.0:8080  — тот же API без TLS, для отладки.
+ *  - https://127.0.0.1:8443 — основной адрес, самоподписанный сертификат;
+ *  - http://127.0.0.1:8080  — тот же API без TLS, для отладки.
  *
- * Эмулятор видит компьютер по адресу 10.0.2.2.
+ * Сервер слушает только loopback: учебному серверу с demo-аккаунтом нечего делать в локальной сети.
+ * Эмулятор видит loopback компьютера по адресу 10.0.2.2.
  */
 fun main() {
     val keyStoreFile = File("certs/vaultnotes.jks")
@@ -27,13 +28,17 @@ fun main() {
     embeddedServer(
         Netty,
         configure = {
-            connector { port = 8080 }
+            connector {
+                host = "127.0.0.1"
+                port = 8080
+            }
             sslConnector(
                 keyStore = keyStore,
                 keyAlias = KEY_ALIAS,
                 keyStorePassword = { KEY_PASSWORD.toCharArray() },
                 privateKeyPassword = { KEY_PASSWORD.toCharArray() },
             ) {
+                host = "127.0.0.1"
                 port = 8443
                 keyStorePath = keyStoreFile
             }

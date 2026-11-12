@@ -22,6 +22,12 @@ fun Application.vaultNotesApi(store: Store) {
             call.respondText("VaultNotes server is running")
         }
 
+        // Страница справки для WebView в приложении.
+        get("/help") {
+            val topic = call.request.queryParameters["topic"] ?: "start"
+            call.respondText(helpPage(topic), ContentType.Text.Html)
+        }
+
         post("/auth/login") {
             val body = call.receiveJson()
             val token = store.login(body.string("user"), body.string("password"))
@@ -97,3 +103,24 @@ private suspend fun ApplicationCall.authorizedUser(store: Store): String? {
     if (user == null) respondJson(buildJsonObject { put("error", "unauthorized") }, HttpStatusCode.Unauthorized)
     return user
 }
+
+private fun helpPage(topic: String): String = """
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Справка VaultNotes</title>
+  <style>body { font-family: sans-serif; margin: 24px; line-height: 1.5; }</style>
+</head>
+<body>
+  <h1>Справка VaultNotes</h1>
+  <p>Раздел: ${topic.filter { it.isLetterOrDigit() || it == '-' }}</p>
+  <p>VaultNotes хранит заметки и открывает их по PIN. Премиум открывает экспорт заметок и сейф.</p>
+  <p>Версия приложения: <span id="version">?</span></p>
+  <script>
+    if (window.VaultBridge) document.getElementById("version").textContent = VaultBridge.appVersion();
+  </script>
+</body>
+</html>
+""".trimIndent()
